@@ -1,0 +1,43 @@
+{
+  "name": "@fraudar/pix-qr-kit",
+  "version": "0.4.0",
+  "description": "BR Code Pix (EMV) generator and parser with CRC16 and validation - zero runtime dependencies",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    },
+    "./node": {
+      "types": "./dist/src/node/index.d.ts",
+      "import": "./dist/src/node/index.js"
+    }
+  },
+  "bin": {
+    "pixqr": "./dist/cli/pixqr.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "pixqr": "tsx cli/pixqr.ts"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^1.2.0",
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.0"
+  }
+}
