@@ -1,6 +1,6 @@
 {
   "name": "@fraudar/pix-qr-kit",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "BR Code Pix (EMV) generator and parser with CRC16 and validation - zero runtime dependencies",
   "license": "MIT",
   "type": "module",

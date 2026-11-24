@@ -1,82 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="100%" role="img" aria-label="pix-qr-kit banner">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 264" width="100%" role="img" aria-label="pix-qr-kit banner">
+  <rect width="760" height="264" fill="#0A0A0A"/>
+  <rect x="0" y="0" width="2" height="264" fill="#FFFFFF" opacity="0.5"/>
+  <text x="40" y="112" fill="#FFFFFF" font-size="46" font-family="ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif" font-weight="800" letter-spacing="-1.9">pix-qr-kit</text>
+  <text x="41" y="142" fill="rgba(245,245,245,0.45)" font-size="14.5" font-family="ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif">BR Code Pix em TypeScript — gere, valide e concilie</text>
+  <rect x="40" y="162" width="70.4" height="27" rx="13.5" fill="rgba(245,245,245,0.06)" stroke="rgba(245,245,245,0.32)"/>
+  <text x="75.2" y="180" text-anchor="middle" fill="#F5F5F5" font-size="12" font-family="ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace" font-weight="600">v1.0.0</text>
+  <text x="128.4" y="180" fill="rgba(245,245,245,0.32)" font-size="12.5" font-family="ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif">por fraudar · MIT</text>
 
-  <defs>
-    <linearGradient id="hero-bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#04100a"/>
-      <stop offset="55%" stop-color="#06130d"/>
-      <stop offset="100%" stop-color="#030905"/>
-    </linearGradient>
-    <linearGradient id="hero-accent" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#8ff0b8"/>
-      <stop offset="55%" stop-color="#3CB871"/>
-      <stop offset="100%" stop-color="#1f9d63"/>
-    </linearGradient>
-    <radialGradient id="hero-glow" cx="0.12" cy="0.30" r="0.75">
-      <stop offset="0%" stop-color="#3CB871" stop-opacity="0.30"/>
-      <stop offset="55%" stop-color="#1f9d63" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="#1f9d63" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="hero-vignette" cx="0.5" cy="0.5" r="0.78">
-      <stop offset="55%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000" stop-opacity="0.5"/>
-    </radialGradient>
-    <pattern id="hero-grid" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
-      <circle cx="1" cy="1" r="0.85" fill="#7fa98a" opacity="0.30"/>
-    </pattern>
-    <filter id="hero-blur" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="52"/>
-    </filter>
-    <filter id="hero-noise" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" result="n"/>
-      <feColorMatrix type="saturate" values="0" in="n" result="g"/>
-      <feBlend in="SourceGraphic" in2="g" mode="soft-light"/>
-    </filter>
-    <linearGradient id="hero-title" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#8ff0b8"/>
-      <stop offset="45%" stop-color="#74D49A"/>
-      <stop offset="100%" stop-color="#1f9d63"/>
-    </linearGradient>
-    <linearGradient id="hero-term" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0a1710"/>
-      <stop offset="100%" stop-color="#030905"/>
-    </linearGradient>
-  </defs>
-
-  <rect width="1200" height="320" fill="url(#hero-bg)"/>
-  <rect width="1200" height="320" fill="url(#hero-glow)"/>
-  <g filter="url(#hero-blur)" opacity="0.5">
-    <ellipse cx="216" cy="48" rx="260" ry="150" fill="#0f7a45">
-      <animate attributeName="cx" values="216;360;216" dur="20s" repeatCount="indefinite"/>
-      <animate attributeName="cy" values="48;144;48" dur="24s" repeatCount="indefinite"/>
-    </ellipse>
-    <ellipse cx="936" cy="288" rx="240" ry="140" fill="#0a4d6b">
-      <animate attributeName="cx" values="936;744;936" dur="22s" repeatCount="indefinite"/>
-      <animate attributeName="cy" values="288;208;288" dur="18s" repeatCount="indefinite"/>
-    </ellipse>
-    <ellipse cx="600" cy="352" rx="220" ry="110" fill="#1d5c2e">
-      <animate attributeName="cx" values="600;408.00000000000006;600" dur="26s" repeatCount="indefinite"/>
-    </ellipse>
+  <rect x="428" y="30" width="300" height="192" rx="14" fill="#141414" stroke="rgba(245,245,245,0.13)"/>
+  <rect x="429" y="31" width="298" height="35" rx="13" fill="rgba(245,245,245,0.03)"/>
+  <line x1="428" y1="66" x2="728" y2="66" stroke="rgba(245,245,245,0.08)"/>
+  <circle cx="450" cy="48" r="4.5" fill="#4A4A4A"/>
+  <circle cx="468" cy="48" r="4.5" fill="#6B6B6B"/>
+  <circle cx="486" cy="48" r="4.5" fill="#8F8F8F"/>
+  <text x="578" y="52" text-anchor="middle" fill="rgba(245,245,245,0.32)" font-size="11.5" font-family="ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace">pixqr · zsh</text>
+  
+    <text x="448" y="100" fill="#F5F5F5" font-size="12.5" font-family="ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace">$</text>
+    <clipPath id="hero-c0" clipPathUnits="userSpaceOnUse"><rect x="468" y="86" width="0" height="19"><animate attributeName="width" values="0;0;186.75;186.75" keyTimes="0;0.1111;0.2417;1" dur="9s" repeatCount="indefinite"/></rect></clipPath>
+    <text x="468" y="100" fill="rgba(245,245,245,0.80)" font-size="12.5" font-family="ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace" clip-path="url(#hero-c0)">pixqr build --key 123.456</text>
+    <text x="448" y="132" fill="rgba(245,245,245,0.80)" font-size="11.5" font-family="ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace">✓</text>
+    <clipPath id="hero-c1" clipPathUnits="userSpaceOnUse"><rect x="468" y="118" width="0" height="19"><animate attributeName="width" values="0;0;172.45000000000002;172.45000000000002" keyTimes="0;0.2889;0.4117;1" dur="9s" repeatCount="indefinite"/></rect></clipPath>
+    <text x="468" y="132" fill="rgba(245,245,245,0.80)" font-size="12.5" font-family="ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace" clip-path="url(#hero-c1)">000201010212...6304ABCD</text>
+    <text x="448" y="164" fill="rgba(245,245,245,0.32)" font-size="12.5" font-family="ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace">↳</text>
+    <clipPath id="hero-c2" clipPathUnits="userSpaceOnUse"><rect x="468" y="150" width="0" height="19"><animate attributeName="width" values="0;0;129.55;129.55" keyTimes="0;0.4667;0.5661;1" dur="9s" repeatCount="indefinite"/></rect></clipPath>
+    <text x="468" y="164" fill="rgba(245,245,245,0.45)" font-size="12.5" font-family="ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace" clip-path="url(#hero-c2)">pix-qr-kit v1.0.0</text>
+  <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4667;0.4687;1" dur="9s" repeatCount="indefinite"/>
+    <rect x="468" y="153" width="6.5" height="13" rx="1.5" fill="#FFFFFF">
+      <animate attributeName="x" values="468;468;590.55;590.55" keyTimes="0;0.4667;0.5661;1" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0.12;0.9" dur="1.1s" repeatCount="indefinite"/>
+    </rect>
   </g>
-  <rect width="1200" height="320" fill="url(#hero-vignette)"/>
-  <rect width="1200" height="320" filter="url(#hero-noise)" opacity="0.03" fill="#E8F5EC"/>
-  <rect x="0" y="18" width="5" height="284" rx="2.5" fill="url(#hero-accent)"/>
-  <rect x="0" y="0" width="624" height="320" fill="url(#hero-grid)" opacity="0.5"/>
-  <text x="70" y="152" fill="url(#hero-title)" font-size="62" font-family="ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif" font-weight="800" letter-spacing="-2">pix-qr-kit</text>
-  <text x="70" y="190" fill="#7fa98a" font-size="17" font-family="ui-sans-serif,system-ui,sans-serif">BR Code Pix em TypeScript — gere, valide, renderize e concilie</text>
-  <rect x="70" y="216" width="74" height="30" rx="8" fill="#3CB871" fill-opacity="0.16" stroke="#3CB871" stroke-opacity="0.55"/>
-  <text x="107" y="236" text-anchor="middle" fill="#74D49A" font-size="13" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-weight="600">v0.4.0</text>
-  <text x="170" y="236" fill="#7fa98a" font-size="13.5" font-family="ui-sans-serif,system-ui,sans-serif">por fraudar</text>
-
-  <rect x="774" y="59" width="380" height="216" rx="14" fill="#000" opacity="0.45"/>
-  <rect x="770" y="52" width="380" height="216" rx="14" fill="url(#hero-term)" stroke="rgba(60,184,113,0.30)" stroke-width="1"/>
-  <path d="M770 66a14 14 0 0 1 14-14h352a14 14 0 0 1 14 14v22H770Z" fill="#0e2117"/>
-  <line x1="770" y1="88" x2="1150" y2="88" stroke="rgba(60,184,113,0.30)" stroke-width="1"/>
-  <circle cx="792" cy="71" r="5.5" fill="#F87171"/>
-  <circle cx="810" cy="71" r="5.5" fill="#E2B77A"/>
-  <circle cx="828" cy="71" r="5.5" fill="#4ADE80"/>
-  <text x="960" y="75" text-anchor="middle" fill="#7fa98a" font-size="11.5" font-family="ui-monospace,SFMono-Regular,Consolas,monospace">pixqr · zsh</text>
-  <text x="790" y="130" fill="#74D49A" font-size="14" font-family="ui-monospace,SFMono-Regular,Consolas,monospace">$</text>
-      <text x="804" y="130" fill="#E8F5EC" font-size="14" font-family="ui-monospace,SFMono-Regular,Consolas,monospace">npm run pixqr -- build --key 123.456...</text><text x="790" y="170" fill="#4ADE80" font-size="14" font-family="ui-monospace,SFMono-Regular,Consolas,monospace">✓</text>
-      <text x="810" y="170" fill="#4ADE80" font-size="14" font-family="ui-monospace,SFMono-Regular,Consolas,monospace">000201...6304ABCD   CRC ok</text><text x="790" y="210" fill="#1f9d63" font-size="14" font-family="ui-monospace,SFMono-Regular,Consolas,monospace">→</text>
-      <text x="810" y="210" fill="#7fa98a" font-size="14" font-family="ui-monospace,SFMono-Regular,Consolas,monospace">pix-qr-kit v0.4.0</text>
 </svg>

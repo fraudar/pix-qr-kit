@@ -1,241 +1,186 @@
 import { writeFile } from 'node:fs/promises';
 
+// Um só sistema visual para todos os assets do README: preto e branco, cartão
+// chapado, tipografia mono. Nada de gradiente, ruído ou fundo animado.
 const C = {
-  canvas0: '#04100a',
-  canvas1: '#06130d',
-  canvas2: '#030905',
-  surface: '#0a1710',
-  titlebar: '#0e2117',
-  border: 'rgba(60,184,113,0.30)',
-  text: '#E8F5EC',
-  muted: '#7fa98a',
-  green: '#3CB871',
-  greenL: '#74D49A',
-  greenX: '#4ADE80',
-  greenDeep: '#1f9d63',
-  mint: '#8ff0b8',
-  red: '#F87171',
-  amber: '#E2B77A',
+  canvas: '#0A0A0A',
+  surface: '#141414',
+  border: 'rgba(245,245,245,0.13)',
+  line: 'rgba(245,245,245,0.08)',
+  text: '#F5F5F5',
+  strong: '#FFFFFF',
+  body: 'rgba(245,245,245,0.80)',
+  dim: 'rgba(245,245,245,0.45)',
+  faint: 'rgba(245,245,245,0.32)',
+  dot1: '#4A4A4A',
+  dot2: '#6B6B6B',
+  dot3: '#8F8F8F',
 };
 
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const VERSION = 'v1.0.0';
+const MONO = "ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace";
+const SANS = "ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif";
+const ADVANCE = 7.15; // px por caractere em mono 13
 
-function defs(id, w, h) {
-  return `
-  <defs>
-    <linearGradient id="${id}-bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${C.canvas0}"/>
-      <stop offset="55%" stop-color="${C.canvas1}"/>
-      <stop offset="100%" stop-color="${C.canvas2}"/>
-    </linearGradient>
-    <linearGradient id="${id}-accent" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${C.mint}"/>
-      <stop offset="55%" stop-color="${C.green}"/>
-      <stop offset="100%" stop-color="${C.greenDeep}"/>
-    </linearGradient>
-    <radialGradient id="${id}-glow" cx="0.12" cy="0.30" r="0.75">
-      <stop offset="0%" stop-color="${C.green}" stop-opacity="0.30"/>
-      <stop offset="55%" stop-color="${C.greenDeep}" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="${C.greenDeep}" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="${id}-vignette" cx="0.5" cy="0.5" r="0.78">
-      <stop offset="55%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000" stop-opacity="0.5"/>
-    </radialGradient>
-    <pattern id="${id}-grid" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
-      <circle cx="1" cy="1" r="0.85" fill="${C.muted}" opacity="0.30"/>
-    </pattern>
-    <filter id="${id}-blur" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="52"/>
-    </filter>
-    <filter id="${id}-noise" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" result="n"/>
-      <feColorMatrix type="saturate" values="0" in="n" result="g"/>
-      <feBlend in="SourceGraphic" in2="g" mode="soft-light"/>
-    </filter>
-    <linearGradient id="${id}-title" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="${C.mint}"/>
-      <stop offset="45%" stop-color="${C.greenL}"/>
-      <stop offset="100%" stop-color="${C.greenDeep}"/>
-    </linearGradient>
-    <linearGradient id="${id}-term" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${C.surface}"/>
-      <stop offset="100%" stop-color="${C.canvas2}"/>
-    </linearGradient>
-  </defs>`;
-}
+const esc = (s) =>
+  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-function shader(id, w, h) {
-  return `
-  <rect width="${w}" height="${h}" fill="url(#${id}-bg)"/>
-  <rect width="${w}" height="${h}" fill="url(#${id}-glow)"/>
-  <g filter="url(#${id}-blur)" opacity="0.5">
-    <ellipse cx="${w * 0.18}" cy="${h * 0.15}" rx="260" ry="150" fill="#0f7a45">
-      <animate attributeName="cx" values="${w * 0.18};${w * 0.30};${w * 0.18}" dur="20s" repeatCount="indefinite"/>
-      <animate attributeName="cy" values="${h * 0.15};${h * 0.45};${h * 0.15}" dur="24s" repeatCount="indefinite"/>
-    </ellipse>
-    <ellipse cx="${w * 0.78}" cy="${h * 0.9}" rx="240" ry="140" fill="#0a4d6b">
-      <animate attributeName="cx" values="${w * 0.78};${w * 0.62};${w * 0.78}" dur="22s" repeatCount="indefinite"/>
-      <animate attributeName="cy" values="${h * 0.9};${h * 0.65};${h * 0.9}" dur="18s" repeatCount="indefinite"/>
-    </ellipse>
-    <ellipse cx="${w * 0.5}" cy="${h * 1.1}" rx="220" ry="110" fill="#1d5c2e">
-      <animate attributeName="cx" values="${w * 0.5};${w * 0.34};${w * 0.5}" dur="26s" repeatCount="indefinite"/>
-    </ellipse>
-  </g>
-  <rect width="${w}" height="${h}" fill="url(#${id}-vignette)"/>
-  <rect width="${w}" height="${h}" filter="url(#${id}-noise)" opacity="0.03" fill="${C.text}"/>`;
-}
+const clip = (text, max) => (text.length <= max ? text : text.slice(0, max - 1) + '…');
 
-function windowChrome(id, x, y, w, h, label) {
+function windowChrome(x, y, w, h, label) {
   const titleH = 36;
   return `
-  <rect x="${x + 4}" y="${y + 7}" width="${w}" height="${h}" rx="14" fill="#000" opacity="0.45"/>
-  <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="url(#${id}-term)" stroke="${C.border}" stroke-width="1"/>
-  <path d="M${x} ${y + 14}a14 14 0 0 1 14-14h${w - 28}a14 14 0 0 1 14 14v${titleH - 14}H${x}Z" fill="${C.titlebar}"/>
-  <line x1="${x}" y1="${y + titleH}" x2="${x + w}" y2="${y + titleH}" stroke="${C.border}" stroke-width="1"/>
-  <circle cx="${x + 22}" cy="${y + 19}" r="5.5" fill="${C.red}"/>
-  <circle cx="${x + 40}" cy="${y + 19}" r="5.5" fill="${C.amber}"/>
-  <circle cx="${x + 58}" cy="${y + 19}" r="5.5" fill="${C.greenX}"/>
-  <text x="${x + w / 2}" y="${y + 23}" text-anchor="middle" fill="${C.muted}" font-size="11.5" font-family="ui-monospace,SFMono-Regular,Consolas,monospace">${esc(label)}</text>`;
+  <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${C.surface}" stroke="${C.border}"/>
+  <rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${titleH - 1}" rx="13" fill="rgba(245,245,245,0.03)"/>
+  <line x1="${x}" y1="${y + titleH}" x2="${x + w}" y2="${y + titleH}" stroke="${C.line}"/>
+  <circle cx="${x + 22}" cy="${y + 18}" r="4.5" fill="${C.dot1}"/>
+  <circle cx="${x + 40}" cy="${y + 18}" r="4.5" fill="${C.dot2}"/>
+  <circle cx="${x + 58}" cy="${y + 18}" r="4.5" fill="${C.dot3}"/>
+  <text x="${x + w / 2}" y="${y + 22}" text-anchor="middle" fill="${C.faint}" font-size="11.5" font-family="${MONO}">${esc(label)}</text>`;
 }
 
-const MONO = 'ui-monospace,SFMono-Regular,Consolas,monospace';
+// Caret que acompanha o texto revelado e pisca no fim.
+function caret(x, y, advance, start, end, cycle) {
+  const s = (start / cycle).toFixed(4);
+  const e = (end / cycle).toFixed(4);
+  return `
+  <g opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;${s};${Number(s) + 0.002};1" dur="${cycle}s" repeatCount="indefinite"/>
+    <rect x="${x}" y="${y}" width="6.5" height="13" rx="1.5" fill="${C.strong}">
+      <animate attributeName="x" values="${x};${x};${x + advance + 1};${x + advance + 1}" keyTimes="0;${s};${e};1" dur="${cycle}s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0.12;0.9" dur="1.1s" repeatCount="indefinite"/>
+    </rect>
+  </g>`;
+}
+
+const heroLines = [
+  { kind: 'cmd', text: clip('pixqr build --key 123.456', 30) },
+  { kind: 'ok', text: clip('000201010212...6304ABCD', 30) },
+  { kind: 'info', text: clip(`pix-qr-kit ${VERSION}`, 30) },
+];
 
 function heroSvg() {
-  const w = 1200;
-  const h = 320;
-  const id = 'hero';
-  const tx = 770;
-  const ty = 52;
-  const tw = 380;
-  const th = 216;
-  const terminalLines = [
-    { prompt: true, text: 'npm run pixqr -- build --key 123.456...', color: C.text },
-    { check: true, text: '000201...6304ABCD   CRC ok', color: C.greenX },
-    { arrow: true, text: 'pix-qr-kit v0.4.0', color: C.muted },
-  ];
+  const w = 760;
+  const h = 264;
+  const tx = 428;
+  const ty = 30;
+  const tw = 300;
+  const th = 192;
+  const cycle = 9;
   let lines = '';
-  terminalLines.forEach((l, i) => {
-    const y = ty + 78 + i * 40;
-    if (l.prompt) {
-      lines += `<text x="${tx + 20}" y="${y}" fill="${C.greenL}" font-size="14" font-family="${MONO}">$</text>
-      <text x="${tx + 34}" y="${y}" fill="${l.color}" font-size="14" font-family="${MONO}">${esc(l.text)}</text>`;
-    } else if (l.check) {
-      lines += `<text x="${tx + 20}" y="${y}" fill="${C.greenX}" font-size="14" font-family="${MONO}">✓</text>
-      <text x="${tx + 40}" y="${y}" fill="${l.color}" font-size="14" font-family="${MONO}">${esc(l.text)}</text>`;
-    } else {
-      lines += `<text x="${tx + 20}" y="${y}" fill="${C.greenDeep}" font-size="14" font-family="${MONO}">→</text>
-      <text x="${tx + 40}" y="${y}" fill="${l.color}" font-size="14" font-family="${MONO}">${esc(l.text)}</text>`;
-    }
+  heroLines.forEach((l, i) => {
+    const y = ty + 70 + i * 32;
+    const start = 1 + i * 1.6;
+    const end = start + 0.3 + l.text.length * 0.035;
+    const advance = l.text.length * ADVANCE;
+    const id = `hero-c${i}`;
+    const mark = l.kind === 'cmd' ? '$' : l.kind === 'ok' ? '✓' : '↳';
+    const markColor = l.kind === 'cmd' ? C.text : l.kind === 'ok' ? C.body : C.faint;
+    const textColor = l.kind === 'cmd' ? C.body : l.kind === 'ok' ? C.body : C.dim;
+    const markSize = l.kind === 'ok' ? 11.5 : 12.5;
+    lines += `
+    <text x="${tx + 20}" y="${y}" fill="${markColor}" font-size="${markSize}" font-family="${MONO}">${mark}</text>
+    <clipPath id="${id}" clipPathUnits="userSpaceOnUse"><rect x="${tx + 40}" y="${y - 14}" width="0" height="19"><animate attributeName="width" values="0;0;${advance + 8};${advance + 8}" keyTimes="0;${(start / cycle).toFixed(4)};${(end / cycle).toFixed(4)};1" dur="${cycle}s" repeatCount="indefinite"/></rect></clipPath>
+    <text x="${tx + 40}" y="${y}" fill="${textColor}" font-size="12.5" font-family="${MONO}" clip-path="url(#${id})">${esc(l.text)}</text>`;
+    if (i === heroLines.length - 1) lines += caret(tx + 40, y - 11, advance, start, end, cycle);
   });
-  const vW = 74;
+
+  const pillW = VERSION.length * 7.4 + 26;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="pix-qr-kit banner">
-${defs(id, w, h)}
-${shader(id, w, h)}
-  <rect x="0" y="18" width="5" height="${h - 36}" rx="2.5" fill="url(#${id}-accent)"/>
-  <rect x="0" y="0" width="${w * 0.52}" height="${h}" fill="url(#${id}-grid)" opacity="0.5"/>
-  <text x="70" y="152" fill="url(#${id}-title)" font-size="62" font-family="ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif" font-weight="800" letter-spacing="-2">pix-qr-kit</text>
-  <text x="70" y="190" fill="${C.muted}" font-size="17" font-family="ui-sans-serif,system-ui,sans-serif">BR Code Pix em TypeScript — gere, valide, renderize e concilie</text>
-  <rect x="70" y="216" width="${vW}" height="30" rx="8" fill="${C.green}" fill-opacity="0.16" stroke="${C.green}" stroke-opacity="0.55"/>
-  <text x="${70 + vW / 2}" y="236" text-anchor="middle" fill="${C.greenL}" font-size="13" font-family="${MONO}" font-weight="600">v0.4.0</text>
-  <text x="${70 + vW + 26}" y="236" fill="${C.muted}" font-size="13.5" font-family="ui-sans-serif,system-ui,sans-serif">por fraudar</text>
-${windowChrome(id, tx, ty, tw, th, 'pixqr · zsh')}
+  <rect width="${w}" height="${h}" fill="${C.canvas}"/>
+  <rect x="0" y="0" width="2" height="${h}" fill="${C.strong}" opacity="0.5"/>
+  <text x="40" y="112" fill="${C.strong}" font-size="46" font-family="${SANS}" font-weight="800" letter-spacing="-1.9">pix-qr-kit</text>
+  <text x="41" y="142" fill="${C.dim}" font-size="14.5" font-family="${SANS}">BR Code Pix em TypeScript — gere, valide e concilie</text>
+  <rect x="40" y="162" width="${pillW}" height="27" rx="13.5" fill="rgba(245,245,245,0.06)" stroke="rgba(245,245,245,0.32)"/>
+  <text x="${40 + pillW / 2}" y="180" text-anchor="middle" fill="${C.text}" font-size="12" font-family="${MONO}" font-weight="600">${VERSION}</text>
+  <text x="${40 + pillW + 18}" y="180" fill="${C.faint}" font-size="12.5" font-family="${SANS}">por fraudar · MIT</text>
+${windowChrome(tx, ty, tw, th, 'pixqr · zsh')}
   ${lines}
 </svg>`;
 }
 
 const terminalSteps = [
-  { prompt: true, text: 'npm run pixqr -- build --key 123.456.789-09 --amount 123.45', color: C.text },
-  { check: true, text: '0002010102122633...6304ABCD  CRC ok', color: C.greenX },
-  { prompt: true, text: 'npm run pixqr -- qr --payload 000201... --styled --logo logo.png', color: C.text },
-  { check: true, text: 'PNG 640px · payload decodificado', color: C.greenX },
-  { prompt: true, text: 'npm test', color: C.text },
-  { check: true, text: '27 passed (3 files) · tsc limpo', color: C.greenX },
+  { kind: 'cmd', text: 'npm run pixqr -- build --key 123.456.789-09 --amount 123.45' },
+  { kind: 'ok', text: '0002010102122633...6304ABCD  CRC ok' },
+  { kind: 'cmd', text: 'npm run pixqr -- qr --payload 000201... --styled' },
+  { kind: 'ok', text: 'PNG 640px · payload decodificado' },
+  { kind: 'cmd', text: 'npm test' },
+  { kind: 'ok', text: '27 passed (3 files) · tsc limpo' },
 ];
 
 function terminalSvg() {
-  const w = 1200;
-  const h = 320;
-  const id = 'term';
-  const tx = 60;
-  const ty = 44;
-  const tw = w - 120;
-  const th = h - 88;
+  const w = 760;
+  const tx = 28;
+  const ty = 24;
+  const tw = w - 56;
+  const rowH = 27;
+  const th = 36 + terminalSteps.length * rowH + 30;
+  const h = th + ty * 2;
+  const cycle = 10;
   let lines = '';
   terminalSteps.forEach((l, i) => {
-    const y = ty + 84 + i * 30;
-    const text = l.text;
-    const width = text.length * 7.7 + 6;
-    const start = 0.04 + i * 0.075;
-    const end = start + 0.07;
-    const clip = `${id}-c${i}`;
+    const y = ty + 36 + 22 + i * rowH;
+    const start = 0.8 + i * 1.45;
+    const end = start + 0.3 + l.text.length * 0.03;
+    const advance = l.text.length * ADVANCE;
+    const id = `term-c${i}`;
+    const mark = l.kind === 'cmd' ? '$' : '✓';
     lines += `
-    <clipPath id="${clip}" clipPathUnits="userSpaceOnUse"><rect x="${tx + 34}" y="${y - 16}" width="0" height="22"><animate attributeName="width" values="0;0;${width};${width}" keyTimes="0;${start.toFixed(2)};${end.toFixed(2)};1" dur="9s" repeatCount="indefinite"/></rect></clipPath>`;
-    if (l.prompt) {
-      lines += `
-    <text x="${tx + 20}" y="${y}" fill="${C.greenL}" font-size="14" font-family="${MONO}">$</text>
-    <text x="${tx + 34}" y="${y}" fill="${l.color}" font-size="14" font-family="${MONO}" clip-path="url(#${clip})">${esc(text)}</text>`;
-    } else {
-      lines += `
-    <text x="${tx + 20}" y="${y}" fill="${C.greenX}" font-size="14" font-family="${MONO}">✓</text>
-    <text x="${tx + 34}" y="${y}" fill="${l.color}" font-size="14" font-family="${MONO}" clip-path="url(#${clip})">${esc(text)}</text>`;
-    }
+    <text x="${tx + 20}" y="${y}" fill="${l.kind === 'cmd' ? C.text : C.body}" font-size="12.5" font-family="${MONO}">${mark}</text>
+    <clipPath id="${id}" clipPathUnits="userSpaceOnUse"><rect x="${tx + 40}" y="${y - 14}" width="0" height="19"><animate attributeName="width" values="0;0;${advance + 8};${advance + 8}" keyTimes="0;${(start / cycle).toFixed(4)};${(end / cycle).toFixed(4)};1" dur="${cycle}s" repeatCount="indefinite"/></rect></clipPath>
+    <text x="${tx + 40}" y="${y}" fill="${l.kind === 'cmd' ? C.body : C.dim}" font-size="12.5" font-family="${MONO}" clip-path="url(#${id})">${esc(l.text)}</text>`;
+    if (i === terminalSteps.length - 1) lines += caret(tx + 40, y - 11, advance, start, end, cycle);
   });
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="terminal pixqr">
-${defs(id, w, h)}
-${shader(id, w, h)}
-${windowChrome(id, tx, ty, tw, th, 'pixqr · zsh')}
+  <rect width="${w}" height="${h}" fill="${C.canvas}"/>
+${windowChrome(tx, ty, tw, th, 'pixqr · zsh')}
   ${lines}
-  <rect x="${tx + 20}" y="${ty + 84 + terminalSteps.length * 30 - 16}" width="8" height="15" rx="1" fill="${C.greenX}"><animate attributeName="opacity" values="1;0;1" dur="1.1s" repeatCount="indefinite"/></rect>
 </svg>`;
 }
 
 const codeLines = [
-  [['const', '#C084FC'], [' built = ', C.text], ['buildPixPayload', C.greenL], ['({', C.text]],
-  [['  key: ', C.muted], ["'123.456.789-09'", '#A5E8BE'], [',', C.text]],
-  [['  merchantName: ', C.muted], ["'Fulano de Tal'", '#A5E8BE'], [',', C.text]],
-  [['  amount: ', C.muted], ['123.45', '#F0C870'], [',', C.text]],
-  [['});', C.text]],
-  [['', C.text]],
-  [['const', '#C084FC'], [' png = ', C.text], ['await', '#C084FC'], [' toStyledQrPng', C.greenL], ['(built.', C.text], ['value', '#A5E8BE'], [', {', C.text]],
-  [['  dark: ', C.muted], ["'#0a2a8a'", '#A5E8BE'], [',', C.text]],
-  [['  logo: ', C.muted], ["'logo.png'", '#A5E8BE'], [',', C.text]],
-  [['});', C.text]],
+  [['const ', 'kw'], ['built', 'id'], [' = ', 'pun'], ['buildPixPayload', 'fn'], ['({', 'pun']],
+  [['  key', 'prop'], [': ', 'pun'], ["'123.456.789-09'", 'str'], [',', 'pun']],
+  [['  merchantName', 'prop'], [': ', 'pun'], ["'Fulano de Tal'", 'str'], [',', 'pun']],
+  [['  amount', 'prop'], [': ', 'pun'], ['123.45', 'num'], [',', 'pun']],
+  [['});', 'pun']],
+  [['', 'pun']],
+  [['const ', 'kw'], ['png', 'id'], [' = ', 'pun'], ['await', 'kw'], [' toStyledQrPng', 'fn'], ['(built.value, {', 'pun']],
+  [['  dark', 'prop'], [': ', 'pun'], ["'#0a2a8a'", 'str'], [',', 'pun']],
+  [['  logo', 'prop'], [': ', 'pun'], ["'logo.png'", 'str'], [',', 'pun']],
+  [['});', 'pun']],
 ];
 
+const tokenColor = {
+  kw: C.strong,
+  fn: C.text,
+  id: C.strong,
+  str: 'rgba(245,245,245,0.55)',
+  num: C.strong,
+  prop: 'rgba(245,245,245,0.45)',
+  pun: 'rgba(245,245,245,0.72)',
+};
+
 function exampleSvg() {
-  const w = 1200;
-  const h = 320;
-  const id = 'code';
-  const tx = 60;
-  const ty = 44;
-  const tw = w - 120;
-  const th = h - 88;
+  const w = 760;
+  const tx = 28;
+  const ty = 24;
+  const tw = w - 56;
+  const rowH = 19;
+  const th = 36 + codeLines.length * rowH + 34;
+  const h = th + ty * 2;
   let lines = '';
   codeLines.forEach((parts, i) => {
-    const y = ty + 84 + i * 17.5;
-    let x = tx + 26;
-    parts.forEach(([text], j) => {
-      const width = text.length * 7.4 + 2;
-      const start = 0.03 + i * 0.04;
-      const clip = `${id}-c${i}-${j}`;
-      lines += `
-    <clipPath id="${clip}" clipPathUnits="userSpaceOnUse"><rect x="${x}" y="${y - 13}" width="0" height="18"><animate attributeName="width" values="0;0;${width};${width}" keyTimes="0;${start.toFixed(2)};${(start + 0.035).toFixed(2)};1" dur="9s" repeatCount="indefinite"/></rect></clipPath>`;
-      x += width;
-    });
-    x = tx + 26;
-    parts.forEach(([text, color], j) => {
-      const width = text.length * 7.4 + 2;
-      const clip = `${id}-c${i}-${j}`;
-      lines += `
-    <text x="${x}" y="${y}" fill="${color}" font-size="13.5" font-family="${MONO}" clip-path="url(#${clip})">${esc(text)}</text>`;
-      x += width;
-    });
+    const y = ty + 36 + 24 + i * rowH;
+    // tspans deixam o próprio renderizador avançar: nenhuma conta de largura.
+    const spans = parts
+      .map(([text, kind]) => `<tspan fill="${tokenColor[kind]}">${esc(text)}</tspan>`)
+      .join('');
+    lines += `
+    <text x="${tx + 22}" y="${y}" font-size="13" font-family="${MONO}" xml:space="preserve">${spans}</text>`;
   });
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="exemplo pix-qr-kit">
-${defs(id, w, h)}
-${shader(id, w, h)}
-${windowChrome(id, tx, ty, tw, th, 'exemplo.ts')}
+  <rect width="${w}" height="${h}" fill="${C.canvas}"/>
+${windowChrome(tx, ty, tw, th, 'exemplo.ts')}
   ${lines}
 </svg>`;
 }
